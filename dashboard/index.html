@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WarOfAsia 亞太戰略兵推與動態預警模擬器</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- 戰術指揮官 Header -->
+    <header class="command-header">
+        <div class="header-title-box">
+            <div class="command-logo">⚔️</div>
+            <div class="command-title">
+                <h1>WarOfAsia 亞太戰略兵推與動態預警模擬器</h1>
+                <p>East Asia Geopolitical Conflict & Whole-of-Society Defense Simulator</p>
+            </div>
+        </div>
+        <div class="header-status-box">
+            <div class="status-badge" id="system-status">
+                <span class="dot"></span>
+                <span id="status-text">系統運作中 - DEFCON 4 (常態警戒)</span>
+            </div>
+            <div class="quick-links">
+                <a href="../README.md" target="_blank">📖 閱讀 README</a>
+                <a href="../專案目錄與檔案導覽地圖.md" target="_blank">🗺️ 檔案總地圖</a>
+                <a href="../亞太區域兵推與防衛架構_綜合整合報告.md" target="_blank">📄 萬字綜合報告</a>
+                <a href="https://github.com/t985026/WarOfAsia" target="_blank" rel="noopener noreferrer" class="github-link">
+                    <svg height="15" width="15" viewBox="0 0 16 16" fill="currentColor" style="vertical-align:-2px; margin-right:4px;">
+                        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+                    </svg>GitHub 專案庫
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 戰略功能頁籤導覽 Bar -->
+    <nav class="nav-tabs-bar">
+        <button class="nav-tab active" data-tab="tab-dashboard">🚨 預警與戰情儀表板</button>
+        <button class="nav-tab" data-tab="tab-timeline">🌐 四國聯合兵棋時間軸 (T-90 ~ T+30)</button>
+        <button class="nav-tab" data-tab="tab-library">🔬 專題研究與劇本圖書館</button>
+        <button class="nav-tab" data-tab="tab-simulator">⚔️ 戰略決策樹兵推模擬器</button>
+    </nav>
+
+    <!-- 主內容區域 -->
+    <div class="tab-content-wrapper">
+
+        <!-- ==================== TAB 1: 預警與戰情儀表板 ==================== -->
+        <main class="dashboard-container tab-pane active" id="tab-dashboard">
+
+            <!-- 左欄：17項預警指標控制台 -->
+            <section class="panel-card left-panel">
+                <div class="panel-header">
+                    <h2>🚨 17 項預警指標控制台</h2>
+                    <button class="btn-toggle" id="btn-reset-all" style="flex:none; padding:4px 10px;">全部重置</button>
+                </div>
+                <p style="font-size:0.78rem; color:var(--text-secondary); margin-bottom:12px;">
+                    點擊指標右側切換鈕（綠/黃/紅），動態運算紅藍方攻防指數與外溢風險：
+                </p>
+                <div class="warning-controls-list" id="warning-list-container">
+                    <!-- JS 動態渲染指標卡片 -->
+                </div>
+            </section>
+
+            <!-- 中欄：兵推動態模擬器與指標儀表 -->
+            <section class="center-grid">
+
+                <!-- 紅藍方攻防即時分數卡 -->
+                <div class="scores-summary-card">
+                    <div class="score-box red-team">
+                        <div class="score-header">
+                            <span>🇨🇳 紅方攻勢壓力指數</span>
+                            <span id="red-score-percent">0%</span>
+                        </div>
+                        <div class="score-value" id="red-score-num">0</div>
+                        <div class="progress-bar-bg">
+                            <div class="progress-fill red" id="red-progress-fill" style="width: 0%;"></div>
+                        </div>
+                    </div>
+
+                    <div class="score-box blue-team">
+                        <div class="score-header">
+                            <span>🇹🇼🇯🇵🇰🇷 藍方國家韌性得分</span>
+                            <span id="blue-score-percent">100%</span>
+                        </div>
+                        <div class="score-value" id="blue-score-num">100</div>
+                        <div class="progress-bar-bg">
+                            <div class="progress-fill blue" id="blue-progress-fill" style="width: 100%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 階段式兵推演練步進器 -->
+                <div class="scenario-stepper">
+                    <div class="stepper-header">🎯 2027 臺海危機與演練階段步進器</div>
+                    <div class="stepper-steps" id="stepper-cards">
+                        <!-- JS 動態渲染 3 階段卡片 -->
+                    </div>
+                    <div class="scenario-active-display" id="scenario-desc-box">
+                        載入演練階段說明中...
+                    </div>
+                </div>
+
+                <!-- 區域外溢風險雙軸 -->
+                <div class="spillover-grid">
+                    <div class="spillover-card">
+                        <div class="spillover-title">🇯🇵 日本西南諸島連動風險</div>
+                        <div class="spillover-val" id="jp-spillover-val" style="color:var(--color-yellow);">低 (10%)</div>
+                        <div class="progress-bar-bg">
+                            <div class="progress-fill" id="jp-progress-fill" style="width: 10%; background: var(--color-yellow);"></div>
+                        </div>
+                    </div>
+
+                    <div class="spillover-card">
+                        <div class="spillover-title">🇰🇷 朝鮮半島第二戰場風險</div>
+                        <div class="spillover-val" id="kr-spillover-val" style="color:var(--color-yellow);">低 (10%)</div>
+                        <div class="progress-bar-bg">
+                            <div class="progress-fill" id="kr-progress-fill" style="width: 10%; background: var(--color-yellow);"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 模組快速檢索與四國卡片 -->
+                <div class="panel-card">
+                    <div class="panel-header">
+                        <h2>🌏 區域專題數據對照</h2>
+                    </div>
+                    <div class="countries-grid" id="countries-container">
+                        <!-- JS 動態渲染四國數據卡片 -->
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- 右欄：受限附件處方與防衛對策 -->
+            <section class="panel-card right-panel">
+                <div class="panel-header">
+                    <h2>🛡️ 受限附件對策觸發器</h2>
+                </div>
+                <p style="font-size:0.78rem; color:var(--text-secondary); margin-bottom:12px;">
+                    當紅方壓力與危機分數達到門檻，自動觸發藍方附件應變處方：
+                </p>
+                <div class="annex-list" id="annex-list-container">
+                    <!-- JS 動態渲染受限附件處方卡片 -->
+                </div>
+            </section>
+
+        </main>
+
+        <!-- ==================== TAB 2: 四國聯合兵棋時間軸 (Timeline Player) ==================== -->
+        <div class="tab-pane single-pane-container" id="tab-timeline">
+            <div class="panel-card full-width-card">
+                <div class="panel-header">
+                    <h2>🌐 四國聯合兵棋統合動態時間軸 (T-90 ~ T+30 Timeline Player)</h2>
+                    <div class="player-controls">
+                        <button class="btn-ctrl" id="btn-tl-prev">◀ 上一階段</button>
+                        <button class="btn-ctrl btn-play" id="btn-tl-play">▶ 自動播放</button>
+                        <button class="btn-ctrl" id="btn-tl-next">下一階段 ▶</button>
+                    </div>
+                </div>
+
+                <!-- 時間軸進度條與節點 -->
+                <div class="timeline-nodes-bar" id="tl-nodes-bar">
+                    <!-- JS 動態渲染時間軸按鈕節點 -->
+                </div>
+
+                <!-- 時間軸當前階段詳情區 -->
+                <div class="timeline-detail-box" id="tl-detail-container">
+                    <!-- JS 動態渲染時間軸詳情 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== TAB 3: 專題研究與劇本圖書館 ==================== -->
+        <div class="tab-pane single-pane-container" id="tab-library">
+            <div class="panel-card full-width-card">
+                <div class="panel-header">
+                    <h2>🔬 專題研究與情境劇本圖書館 (Scenario & Research Library)</h2>
+                    <div class="library-filter-bar">
+                        <button class="filter-btn active" data-filter="all">全部 (10)</button>
+                        <button class="filter-btn" data-filter="scenario">情境劇本 (5)</button>
+                        <button class="filter-btn" data-filter="research">新興專題 (4)</button>
+                        <button class="filter-btn" data-filter="joint">聯合兵棋 (1)</button>
+                        <input type="text" class="search-input" id="lib-search-input" placeholder="🔍 搜尋關鍵字 (如: 48小時, 衛星, 半導體)...">
+                    </div>
+                </div>
+
+                <!-- 圖書館卡片網格 -->
+                <div class="library-grid" id="library-cards-container">
+                    <!-- JS 動態渲染圖書館檔案卡片 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== TAB 4: 戰略決策樹兵推模擬器 ==================== -->
+        <div class="tab-pane single-pane-container" id="tab-simulator">
+            <div class="panel-card full-width-card">
+                <div class="panel-header">
+                    <h2>⚔️ 戰略決策樹兵推模擬器 (Interactive Wargame Simulator)</h2>
+                    <div class="scenario-selector-box">
+                        <label>選擇推演想定：</label>
+                        <select id="sim-scenario-select" class="custom-select">
+                            <!-- JS 動態渲染想定選單 -->
+                        </select>
+                        <button class="btn-ctrl" id="btn-sim-restart">🔄 重新開始本想定</button>
+                    </div>
+                </div>
+
+                <!-- 模擬器四軸即時數據面板 -->
+                <div class="sim-meters-bar">
+                    <div class="meter-box">
+                        <span class="meter-label">🛡️ 國家指揮與社會韌性</span>
+                        <div class="meter-value" id="meter-resilience">80%</div>
+                        <div class="progress-bar-bg"><div class="progress-fill blue" id="fill-resilience" style="width: 80%;"></div></div>
+                    </div>
+                    <div class="meter-box">
+                        <span class="meter-label">🌐 印太同盟協同支援度</span>
+                        <div class="meter-value" id="meter-alliance">20%</div>
+                        <div class="progress-bar-bg"><div class="progress-fill green" id="fill-alliance" style="width: 20%;"></div></div>
+                    </div>
+                    <div class="meter-box">
+                        <span class="meter-label">⚠️ 社會恐慌與假訊息指數</span>
+                        <div class="meter-value" id="meter-panic">25%</div>
+                        <div class="progress-bar-bg"><div class="progress-fill red" id="fill-panic" style="width: 25%;"></div></div>
+                    </div>
+                    <div class="meter-box">
+                        <span class="meter-label">💥 區域外溢衝突風險</span>
+                        <div class="meter-value" id="meter-spillover">15%</div>
+                        <div class="progress-bar-bg"><div class="progress-fill yellow" id="fill-spillover" style="width: 15%;"></div></div>
+                    </div>
+                </div>
+
+                <!-- 戰術決策互動節點區 -->
+                <div class="sim-node-container" id="sim-node-box">
+                    <!-- JS 動態渲染決策節點與按鈕 -->
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 檔案閱覽 Modal Drawer -->
+    <div class="modal-overlay" id="doc-modal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 id="modal-doc-title">檔案閱讀中</h3>
+                <button class="modal-close-btn" id="btn-close-modal">✕</button>
+            </div>
+            <div class="modal-body" id="modal-doc-content">
+                <!-- JS 動態渲染檔案摘要與全文預覽 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 腳本引入 -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

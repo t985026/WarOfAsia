@@ -1,0 +1,35 @@
+# 快速入門與閱讀路徑指南 (Getting Started Guide)
+
+本指南旨在協助不同專業背景的研究人員與決策者，快速選擇最適切的閱讀與演練路徑。
+
+---
+
+## 🎯 依角色分類之閱讀路徑 (Role-Based Paths)
+
+### 1. 🏛️ 軍政決策者與高階指揮官 (Policy Makers & Commanders)
+- **目標**：掌握整體亞太地緣情勢、2027 危機時軸與國家持續運作 (COG) 授權。
+- **推薦路徑**：
+  1. [亞太區域兵推與防禦體系_綜合整合報告.md](file:///i:/Project/WarOfAsia/亞太區域兵推與防衛架構_綜合整合報告.md)（掌握萬字戰略全景）
+  2. [臺灣藍方國家持續運作與全社會防衛架構_完整總版.md](file:///i:/Project/WarOfAsia/臺灣/臺灣藍方國家持續運作與全社會防衛架構_完整總版.md)
+  3. [受限附件A_國家核心功能與代理順位清冊模板.md](file:///i:/Project/WarOfAsia/臺灣/受限附件A_國家核心功能與代理順位清冊模板.md)
+
+### 2. 💻 資安、通訊與關鍵基礎設施 (CI) 專家 (Cyber & Infrastructure Specialists)
+- **目標**：評估海底電纜切斷、微波站備援、跨境 VPN/eSIM 滲透與零信任防護。
+- **推薦路徑**：
+  1. [docs/warning-indicators.md](file:///i:/Project/WarOfAsia/docs/warning-indicators.md)（理解資安預警指標 m11-m14）
+  2. [臺灣藍方_第二卷_關鍵基礎設施與數位韌性.md](file:///i:/Project/WarOfAsia/臺灣/臺灣藍方_第二卷_關鍵基礎設施與數位韌性.md)
+  3. [受限附件B](file:///i:/Project/WarOfAsia/臺灣/受限附件B_關鍵基礎設施相依與替代節點模板.md)、[受限附件D](file:///i:/Project/WarOfAsia/臺灣/受限附件D_VPN_eSIM與跨境通信供應鏈清冊模板.md) 及 [受限附件E](file:///i:/Project/WarOfAsia/臺灣/受限附件E_海纜衛星與緊急通信容量模板.md)
+
+### 3. ⚔️ 兵推研究員與紅隊推演人員 (War Game Analysts & Red Teamers)
+- **目標**：分析中國戰狼政策、黨國指揮失真、灰色地帶封鎖、日本西南諸島與韓國雙重戰場連動。
+- **推薦路徑**：
+  1. 雙擊開啟 [dashboard/index.html](file:///i:/Project/WarOfAsia/dashboard/index.html)（進行動態分數模擬）
+  2. [docs/wargame-scenarios.md](file:///i:/Project/WarOfAsia/docs/wargame-scenarios.md)（掌握演練階段規範）
+  3. [中國紅方完整總版](file:///i:/Project/WarOfAsia/中國/中國紅方國家級滲透與混合威脅架構_完整總版.md) 與 [韓國紅方雙重戰場總版](file:///i:/Project/WarOfAsia/韓國/韓國紅方_中國北韓俄羅斯對韓複合施壓與雙重戰場兵推_完整總版.md)
+
+---
+
+## 🛠️ 快速操作指引
+
+- **線上/本機動態模擬**：雙擊開啟 `dashboard/index.html` 即可進行預警燈號與外溢風險試算。
+- **全文關鍵字檢索**：參考 [專案目錄與檔案導覽地圖.md](file:///i:/Project/WarOfAsia/專案目錄與檔案導覽地圖.md) 之分類標籤表進行主題定位。
