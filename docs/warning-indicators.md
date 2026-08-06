@@ -32,7 +32,7 @@
 
 ## 🧮 模擬器分數計算演算法 (Calculation Engine)
 
-在 [Web Dashboard](file:///i:/Project/WarOfAsia/dashboard/index.html) 中，計算引擎公式如下：
+在 [Web Dashboard](../dashboard/index.html) 中，計算引擎公式如下：
 
 ```javascript
 // 總最大權重分母 = sum(metric.weight * 2)  [全紅燈時]

@@ -28,7 +28,7 @@
 
 ## ⚠️ 資安與威脅通報機制 (Reporting Security Concerns)
 
-若您在閱讀或使用本專案文件與 [Web 兵推模擬器](file:///i:/Project/WarOfAsia/dashboard/index.html) 時，發現任何可能涉及敏感資訊洩漏、安全邊界違規或資安風險之內容，請透過以下管道聯絡團隊修正：
+若您在閱讀或使用本專案文件與 [Web 兵推模擬器](./dashboard/index.html) 時，發現任何可能涉及敏感資訊洩漏、安全邊界違規或資安風險之內容，請透過以下管道聯絡團隊修正：
 
 - **GitHub Issues**：發起 Issue 並標註 `[Security Concern]`。
 - **專案維護小組**：針對敏感內容，將於 24 小時內完成評估並進行去識別化修訂或下架處理。

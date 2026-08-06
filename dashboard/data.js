@@ -263,28 +263,28 @@ window.WAR_DATA = {
         china: {
             name: '中國 (紅方)',
             flag: '🇨🇳',
-            docLink: 'file:///i:/Project/WarOfAsia/中國/中國紅方國家級滲透與混合威脅架構_完整總版.md',
+            docLink: '中國/中國紅方國家級滲透與混合威脅架構_完整總版.md',
             strategy: '黨國一體集中指揮、戰狼外交威懾、灰帶海空隔離、認知迫降與對臺實體模型演練。',
             vulnerabilities: '集中指揮「單一情勢圖失真」、基層報喜不報憂、多戰區後勤資源分散、房地產與地方債民怨。'
         },
         japan: {
             name: '日本 (紅/藍方)',
             flag: '🇯🇵',
-            docLink: 'file:///i:/Project/WarOfAsia/日本/日本藍方國家持續運作與全社會防衛架構_完整總版.md',
+            docLink: '日本/日本藍方國家持續運作與全社會防衛架構_完整總版.md',
             strategy: '日美同盟防衛、西南諸島 (與那國/石垣/宮古) 離島避難、國民保護法啟動與民生物資防護。',
             vulnerabilities: '紅方試圖離間日美信任、離島物資輸送脆弱、災害與軍事危機疊加效應。'
         },
         taiwan: {
             name: '臺灣 (藍方/紅方威脅)',
             flag: '🇹🇼',
-            docLink: 'file:///i:/Project/WarOfAsia/臺灣/2027中共侵臺情境_區域軍政環境與複合預警評估_完整總版.md',
+            docLink: '臺灣/2027中共侵臺情境_區域軍政環境與複合預警評估_完整總版.md',
             strategy: '全社會防衛韌性、重層嚇阻、關鍵基礎設施 (CI) 備援、海底電纜/衛星多元通訊與受限附件 A-E 機制。',
             vulnerabilities: '灰色地帶封鎖、海底電纜切斷風險、VPN/eSIM 認知滲透與政治迫降壓力。'
         },
         korea: {
             name: '韓國 (藍/紅方雙重戰場)',
             flag: '🇰🇷',
-            docLink: 'file:///i:/Project/WarOfAsia/韓國/韓國藍方_臺海外溢北韓第二戰場與中國複合威脅_完整總版.md',
+            docLink: '韓國/韓國藍方_臺海外溢北韓第二戰場與中國複合威脅_完整總版.md',
             strategy: '美韓同盟 (USFK) 防衛、處置北韓 DMZ 第二戰場挑釁、維持印太戰略自主與國際支援。',
             vulnerabilities: '中俄朝三方協同施壓、首爾首都圈北韓砲擊威脅、臺海危機引致兩線作戰。'
         }

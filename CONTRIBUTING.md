@@ -35,7 +35,7 @@
 
 ## 🏷️ 三、 標籤系統 (Tagging System)
 
-在新新增或更新文檔時，請於內文標題或全專案 [專案目錄與檔案導覽地圖.md](file:///i:/Project/WarOfAsia/專案目錄與檔案導覽地圖.md) 中適當標註以下標籤：
+在新新增或更新文檔時，請於內文標題或全專案 [專案目錄與檔案導覽地圖.md](./專案目錄與檔案導覽地圖.md) 中適當標註以下標籤：
 - `[總版]`：萬字彙整總報告。
 - `[紅方]`：外部敵對行為者攻勢與灰帶襲擾推演。
 - `[藍方]`：全社會防衛、國家持續運作 (COG) 與備援防護。
@@ -68,7 +68,7 @@
 
 1. **Fork 或 Clone** 專案至您的本地環境。
 2. 建立專題分支：`git checkout -b feature/add-new-scenario`
-3. 撰寫/修訂 Markdown 文件，並更新 [專案目錄與檔案導覽地圖.md](file:///i:/Project/WarOfAsia/專案目錄與檔案導覽地圖.md) 及 [SUMMARY.md](file:///i:/Project/WarOfAsia/SUMMARY.md)。
+3. 撰寫/修訂 Markdown 文件，並更新 [專案目錄與檔案導覽地圖.md](./專案目錄與檔案導覽地圖.md) 及 [SUMMARY.md](./SUMMARY.md)。
 4. 於 `dashboard/data.js` 中同步更新相應之數據或預警指標（若適用）。
 5. 提交 Conventional Commits 訊息：`git commit -m "docs: add new scenario report for Taiwan Strait"`
 6. 發起 Pull Request (PR) 進行審核。
