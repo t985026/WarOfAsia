@@ -17,6 +17,16 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentLibFilter = 'all';
     let currentLibSearch = '';
 
+    // 初始化 Mermaid 圖表引擎
+    if (typeof mermaid !== 'undefined') {
+        mermaid.initialize({
+            startOnLoad: false,
+            theme: 'dark',
+            securityLevel: 'loose',
+            fontFamily: 'Inter, system-ui, sans-serif'
+        });
+    }
+
     // 決策樹模擬器當前狀態
     let currentScenarioId = 'dt-48hr';
     let currentSimNodeId = 'node-1';
@@ -553,6 +563,33 @@ document.addEventListener('DOMContentLoaded', () => {
             // 使用 marked.js 渲染 HTML
             if (typeof marked !== 'undefined' && marked.parse) {
                 viewFull.innerHTML = `<div class="markdown-rendered-body">${marked.parse(mdText)}</div>`;
+                
+                // 處理並動態繪製 Mermaid 視覺化流程圖
+                if (typeof mermaid !== 'undefined') {
+                    const mermaidCodes = viewFull.querySelectorAll('code.language-mermaid');
+                    if (mermaidCodes.length > 0) {
+                        mermaidCodes.forEach((codeNode) => {
+                            const preNode = codeNode.parentElement;
+                            const div = document.createElement('div');
+                            div.className = 'mermaid';
+                            div.textContent = codeNode.textContent;
+                            if (preNode && preNode.parentNode) {
+                                preNode.parentNode.replaceChild(div, preNode);
+                            }
+                        });
+
+                        setTimeout(async () => {
+                            try {
+                                const nodes = viewFull.querySelectorAll('.mermaid');
+                                if (nodes.length > 0) {
+                                    await mermaid.run({ nodes: nodes });
+                                }
+                            } catch (mErr) {
+                                console.warn('Mermaid diagram render error:', mErr);
+                            }
+                        }, 100);
+                    }
+                }
             } else {
                 // Fallback: 預覽原始 text
                 viewFull.innerHTML = `<pre><code>${escapeHtml(mdText)}</code></pre>`;

@@ -1055,6 +1055,25 @@ body {
     color: var(--text-primary);
 }
 
+/* ==================== Mermaid 圖表容器樣式 ==================== */
+.mermaid {
+    background: rgba(13, 19, 34, 0.85);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 20px;
+    margin: 1.5em 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-x: auto;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.mermaid svg {
+    max-width: 100% !important;
+    height: auto !important;
+}
+
 .modal-body table {
     width: 100%;
     border-collapse: collapse;
