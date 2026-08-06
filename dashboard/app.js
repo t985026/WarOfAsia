@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
         initTab4Simulator();
     }
 
-    // 頁籤切換邏輯
+    // 頁籤切換與頂部快速文檔按鈕
     function setupTabNavigation() {
         navTabs.forEach(tab => {
             tab.addEventListener('click', () => {
@@ -94,6 +94,26 @@ document.addEventListener('DOMContentLoaded', () => {
                 tab.classList.add('active');
                 const targetPane = document.getElementById(targetTabId);
                 if (targetPane) targetPane.classList.add('active');
+            });
+        });
+
+        // 頂部快速報告按鈕內嵌閱讀
+        document.querySelectorAll('.quick-doc-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const title = btn.getAttribute('data-title');
+                const path = btn.getAttribute('data-path');
+                openDocModal({
+                    title: title,
+                    titleEn: 'WarOfAsia Master Document',
+                    filePath: path,
+                    wordCount: '核心總覽報告',
+                    summary: `本報告 (${title}) 支援在 Web 儀表板內直接點擊閱讀全文 Markdown 內容。`,
+                    highlights: [
+                        '亞太區域兵推與防務體系核心架構導覽',
+                        '無縫網頁端內嵌渲染，無需開啟新視窗分頁',
+                        '即時態勢感知與戰略對策指引'
+                    ]
+                });
             });
         });
     }
@@ -278,10 +298,25 @@ document.addEventListener('DOMContentLoaded', () => {
             const c = WAR.countries[key];
             const item = document.createElement('div');
             item.className = 'country-item';
+            const relPath = c.docLink.replace(/^file:\/\/\/[iI]:\/Project\/WarOfAsia\//, '');
             item.innerHTML = `
                 <span class="country-name">${c.flag} ${c.name}</span>
-                <a href="../${c.docLink.replace('file:///i:/Project/WarOfAsia/', '')}" target="_blank">📄 查閱總版</a>
+                <button class="btn-read-doc-path" data-title="${c.name} 國家戰略防衛與威脅架構" data-path="${relPath}">📄 查閱總版</button>
             `;
+            item.querySelector('.btn-read-doc-path').addEventListener('click', () => {
+                openDocModal({
+                    title: `${c.flag} ${c.name} 國家級戰略防衛與威脅架構報告`,
+                    titleEn: `${c.name} National Defense Master Report`,
+                    filePath: relPath,
+                    wordCount: '國家級總版',
+                    summary: `核心戰術與防禦戰略：${c.strategy}\n\n體系脆弱性與挑戰：${c.vulnerabilities}`,
+                    highlights: [
+                        `國家戰略部署與防衛機制：${c.strategy}`,
+                        `安全脆弱性與關鍵挑戰：${c.vulnerabilities}`,
+                        `全社會防衛與跨國印太同盟應變體系`
+                    ]
+                });
+            });
             countriesContainer.appendChild(item);
         });
     }
@@ -445,7 +480,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function openDocModal(doc) {
-        modalTitle.innerText = doc.title;
+        if (!doc) return;
+        const title = doc.title || '戰略報告文件';
+        const titleEn = doc.titleEn || '';
+        const summary = doc.summary || '';
+        const highlights = doc.highlights || [];
+        const filePath = doc.filePath || '';
+        const wordCount = doc.wordCount || 'Markdown 格式';
+
+        modalTitle.innerText = title;
         docModal.classList.add('active');
 
         // 預設先顯示 Modal 載入動畫與 UI 架構
@@ -457,20 +500,22 @@ document.addEventListener('DOMContentLoaded', () => {
             <div id="modal-tab-view-full">
                 <div class="modal-loading">
                     <div class="spinner"></div>
-                    <div>正在載入 Markdown 報告原文 (<code>${doc.filePath}</code>)...</div>
+                    <div>正在載入 Markdown 報告原文 (<code>${filePath}</code>)...</div>
                 </div>
             </div>
             <div id="modal-tab-view-summary" style="display:none;">
-                <p style="color:var(--color-cyan); font-weight:600; margin-bottom:12px;">【${doc.titleEn}】</p>
+                ${titleEn ? `<p style="color:var(--color-cyan); font-weight:600; margin-bottom:12px;">【${titleEn}】</p>` : ''}
                 <div style="background:rgba(13,19,34,0.8); border-left:3px solid var(--color-cyan); padding:12px; margin-bottom:16px;">
-                    <strong>核心摘要：</strong><br>${doc.summary}
+                    <strong>核心摘要：</strong><br>${summary || '無摘要說明'}
                 </div>
+                ${highlights.length ? `
                 <h4 style="color:#ffffff; margin-bottom:8px;">📌 本報告四大戰略重點（Key Findings）：</h4>
                 <ul class="modal-highlight-list">
-                    ${doc.highlights.map(h => `<li>${h}</li>`).join('')}
+                    ${highlights.map(h => `<li>${h}</li>`).join('')}
                 </ul>
+                ` : ''}
                 <p style="margin-top:16px; color:var(--text-secondary); font-size:0.8rem;">
-                    <strong>檔案路徑：</strong><code>${doc.filePath}</code> | <strong>字數：</strong>${doc.wordCount}
+                    <strong>檔案路徑：</strong><code>${filePath}</code> | <strong>字數：</strong>${wordCount}
                 </p>
             </div>
         `;
@@ -498,7 +543,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Fetch .md 檔案內容並渲染
         try {
-            const rawPath = `../${encodeURIComponent(doc.filePath).replace(/%2F/g, '/')}`;
+            const rawPath = `../${encodeURIComponent(filePath).replace(/%2F/g, '/')}`;
             const response = await fetch(rawPath);
             if (!response.ok) {
                 throw new Error(`HTTP ${response.status} - 讀取失敗`);
@@ -521,13 +566,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     <small>錯誤詳情: ${err.message}</small>
                 </div>
                 <div style="background:rgba(13,19,34,0.8); border-left:3px solid var(--color-cyan); padding:16px; margin-bottom:16px;">
-                    <h3 style="color:var(--color-cyan); margin-bottom:8px;">【${doc.title}】報告重點整理</h3>
-                    <p style="margin-bottom:12px;"><strong>英文標題：</strong>${doc.titleEn}</p>
-                    <p style="margin-bottom:12px;"><strong>核心摘要：</strong>${doc.summary}</p>
-                    <h4 style="color:#ffffff; margin-bottom:8px;">📌 四大戰略重點：</h4>
+                    <h3 style="color:var(--color-cyan); margin-bottom:8px;">【${title}】報告重點整理</h3>
+                    ${titleEn ? `<p style="margin-bottom:12px;"><strong>英文標題：</strong>${titleEn}</p>` : ''}
+                    <p style="margin-bottom:12px;"><strong>核心摘要：</strong>${summary || '無摘要說明'}</p>
+                    ${highlights.length ? `
+                    <h4 style="color:#ffffff; margin-bottom:8px;">📌 戰略重點：</h4>
                     <ul class="modal-highlight-list">
-                        ${doc.highlights.map(h => `<li>${h}</li>`).join('')}
+                        ${highlights.map(h => `<li>${h}</li>`).join('')}
                     </ul>
+                    ` : ''}
                 </div>
             `;
         }

@@ -124,19 +124,41 @@ body {
     100% { opacity: 0.4; transform: scale(0.9); }
 }
 
-.quick-links a {
+.quick-links a, .quick-links button.quick-doc-btn {
     color: var(--color-cyan);
+    background: none;
     text-decoration: none;
     font-size: 0.85rem;
     padding: 6px 12px;
     border: 1px solid var(--border-color);
     border-radius: 6px;
     transition: all 0.2s ease;
+    cursor: pointer;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
 }
 
-.quick-links a:hover {
+.quick-links a:hover, .quick-links button.quick-doc-btn:hover {
     background: rgba(0, 210, 211, 0.15);
     border-color: var(--color-cyan);
+}
+
+.btn-read-doc-path {
+    background: rgba(0, 210, 211, 0.1);
+    border: 1px solid var(--border-color);
+    color: var(--color-cyan);
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-read-doc-path:hover {
+    background: rgba(0, 210, 211, 0.25);
+    border-color: var(--color-cyan);
+    color: #ffffff;
 }
 
 .quick-links a.github-link {
