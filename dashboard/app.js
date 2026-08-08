@@ -16,15 +16,43 @@ document.addEventListener('DOMContentLoaded', () => {
     let timelineTimer = null;
     let currentLibFilter = 'all';
     let currentLibSearch = '';
+    let currentMetricCatFilter = 'all';
 
-    // 初始化 Mermaid 圖表引擎
-    if (typeof mermaid !== 'undefined') {
-        mermaid.initialize({
-            startOnLoad: false,
-            theme: 'dark',
-            securityLevel: 'loose',
-            fontFamily: 'Inter, system-ui, sans-serif'
+    // 非同步動態載入腳本工具
+    function loadScript(src) {
+        return new Promise((resolve, reject) => {
+            if (document.querySelector(`script[src="${src}"]`)) {
+                resolve();
+                return;
+            }
+            const s = document.createElement('script');
+            s.src = src;
+            s.onload = resolve;
+            s.onerror = reject;
+            document.head.appendChild(s);
         });
+    }
+
+    // 按需懶加載 Mermaid 繪圖引擎 (本地優先 0ms 延遲 + 多重 CDN 備援)
+    async function ensureMermaidLoaded() {
+        if (typeof mermaid === 'undefined') {
+            try {
+                // 優先使用專案本地 bundle (0ms 網路延遲)
+                await loadScript('libs/mermaid.min.js');
+            } catch (e) {
+                // 備援 Cloudflare CDN
+                await loadScript('https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js').catch(()=>{});
+            }
+        }
+        if (typeof mermaid !== 'undefined' && !window.mermaidInitialized) {
+            mermaid.initialize({
+                startOnLoad: false,
+                theme: 'dark',
+                securityLevel: 'loose',
+                fontFamily: 'Inter, system-ui, sans-serif'
+            });
+            window.mermaidInitialized = true;
+        }
     }
 
     // 決策樹模擬器當前狀態
@@ -52,6 +80,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const annexContainer = document.getElementById('annex-list-container');
     const countriesContainer = document.getElementById('countries-container');
     const btnResetAll = document.getElementById('btn-reset-all');
+    const metricCatBtns = document.querySelectorAll('.metric-cat-btn');
+    const btnPresets = document.querySelectorAll('.btn-preset');
+    const chipGreenCount = document.getElementById('chip-green-count');
+    const chipYellowCount = document.getElementById('chip-yellow-count');
+    const chipRedCount = document.getElementById('chip-red-count');
 
     // TAB 2: 時間軸 Player
     const tlNodesBar = document.getElementById('tl-nodes-bar');
@@ -88,6 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function init() {
         setupTabNavigation();
         initTab1Dashboard();
+        initSituationMap();
         initTab2Timeline();
         initTab3Library();
         initTab4Simulator();
@@ -137,6 +171,7 @@ document.addEventListener('DOMContentLoaded', () => {
         renderCountries();
         calculateScores();
 
+        // 重置按鈕
         btnResetAll.addEventListener('click', () => {
             WAR.warningMetrics.forEach(m => m.level = 'green');
             currentPhase = 1;
@@ -144,11 +179,60 @@ document.addEventListener('DOMContentLoaded', () => {
             renderScenarioStepper();
             calculateScores();
         });
+
+        // 分類篩選按鈕
+        metricCatBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                metricCatBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentMetricCatFilter = btn.getAttribute('data-cat');
+                renderWarningMetrics();
+            });
+        });
+
+        // 快速情境預設按鈕
+        btnPresets.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const preset = btn.getAttribute('data-preset');
+                applyPresetScenario(preset);
+            });
+        });
+    }
+
+    function applyPresetScenario(preset) {
+        if (preset === 'normal') {
+            WAR.warningMetrics.forEach(m => m.level = 'green');
+        } else if (preset === 'grayzone') {
+            WAR.warningMetrics.forEach((m, idx) => {
+                if (['m1', 'm2', 'm6', 'm11', 'm12', 'm14', 'm18', 'm19', 'm21', 'm22', 'm28', 'm31', 'm32', 'm33', 'm35'].includes(m.id)) {
+                    m.level = 'yellow';
+                } else if (['m3', 'm7', 'm13', 'm25', 'm34'].includes(m.id)) {
+                    m.level = 'red';
+                } else {
+                    m.level = 'green';
+                }
+            });
+        } else if (preset === 'crisis') {
+            WAR.warningMetrics.forEach((m, idx) => {
+                if (['m1', 'm2', 'm3', 'm4', 'm6', 'm7', 'm11', 'm12', 'm14', 'm21', 'm22', 'm24', 'm25', 'm27', 'm28', 'm31', 'm32', 'm34', 'm36'].includes(m.id)) {
+                    m.level = 'red';
+                } else {
+                    m.level = 'yellow';
+                }
+            });
+        }
+        renderWarningMetrics();
+        calculateScores();
     }
 
     function renderWarningMetrics() {
         warningContainer.innerHTML = '';
-        WAR.warningMetrics.forEach(metric => {
+        const filteredMetrics = WAR.warningMetrics.filter(m => {
+            if (currentMetricCatFilter === 'all') return true;
+            return m.category === currentMetricCatFilter;
+        });
+
+        filteredMetrics.forEach(metric => {
             const item = document.createElement('div');
             item.className = 'metric-item';
             const realWorldText = metric.realWorldBaseline || '真實威脅權重已估算';
@@ -178,7 +262,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 const targetMetric = WAR.warningMetrics.find(m => m.id === id);
                 if (targetMetric) {
                     targetMetric.level = level;
-                    renderWarningMetrics();
+                    // 高效單卡片樣式切換，避免全 DOM 重繪
+                    const parent = e.target.closest('.state-toggles');
+                    if (parent) {
+                        parent.querySelectorAll('.btn-toggle').forEach(b => b.classList.remove('active'));
+                        e.target.classList.add('active');
+                    }
                     calculateScores();
                 }
             });
@@ -215,51 +304,81 @@ document.addEventListener('DOMContentLoaded', () => {
     function calculateScores() {
         let totalWeight = 0;
         let redScore = 0;
+        let greenCount = 0;
+        let yellowCount = 0;
+        let redCount = 0;
 
         WAR.warningMetrics.forEach(m => {
             totalWeight += m.weight * 2;
-            if (m.level === 'yellow') redScore += m.weight * 1;
-            else if (m.level === 'red') redScore += m.weight * 2;
+            if (m.level === 'green') {
+                greenCount++;
+            } else if (m.level === 'yellow') {
+                yellowCount++;
+                redScore += m.weight * 1;
+            } else if (m.level === 'red') {
+                redCount++;
+                redScore += m.weight * 2;
+            }
         });
 
-        const redPercent = Math.round((redScore / totalWeight) * 100);
-        const blueResiliencePercent = Math.max(0, 100 - Math.round(redPercent * 0.85));
+        // 更新統計晶片
+        if (chipGreenCount) chipGreenCount.innerText = `🟢 綠燈: ${greenCount}`;
+        if (chipYellowCount) chipYellowCount.innerText = `🟡 黃燈: ${yellowCount}`;
+        if (chipRedCount) chipRedCount.innerText = `🔴 紅燈: ${redCount}`;
+
+        // 戰術危機臨界門檻基準分數 (不需要全亮才叫戰爭，符合 5~6 項核心重大指標即達 100% 危機臨界)
+        const WAR_CRITICAL_THRESHOLD_SCORE = 100;
+
+        const redPercent = Math.round((redScore / WAR_CRITICAL_THRESHOLD_SCORE) * 100);
+        const blueResiliencePercent = Math.max(0, 100 - Math.round((redScore / WAR_CRITICAL_THRESHOLD_SCORE) * 75));
 
         document.getElementById('red-score-percent').innerText = `${redPercent}%`;
         document.getElementById('red-score-num').innerText = redScore;
-        document.getElementById('red-progress-fill').style.width = `${redPercent}%`;
+        document.getElementById('red-progress-fill').style.width = `${Math.min(100, redPercent)}%`;
 
         document.getElementById('blue-score-percent').innerText = `${blueResiliencePercent}%`;
-        document.getElementById('blue-score-num').innerText = Math.round(blueResiliencePercent * 10);
-        document.getElementById('blue-progress-fill').style.width = `${blueResiliencePercent}%`;
+        document.getElementById('blue-score-num').innerText = Math.max(0, Math.round(blueResiliencePercent * 10));
+        document.getElementById('blue-progress-fill').style.width = `${Math.min(100, Math.max(0, blueResiliencePercent))}%`;
 
         const statusBadge = document.getElementById('system-status');
         const statusText = document.getElementById('status-text');
-        if (redPercent >= 65) {
+        if (redPercent >= 100) {
+            statusBadge.style.borderColor = 'var(--color-red)';
+            statusBadge.style.color = 'var(--color-red)';
+            statusBadge.style.background = 'rgba(255, 71, 87, 0.2)';
+            statusText.innerText = `戰事爆發 - DEFCON 1 (全面對抗與第一島鏈同盟戰事)`;
+        } else if (redPercent >= 75) {
             statusBadge.style.borderColor = 'var(--color-red)';
             statusBadge.style.color = 'var(--color-red)';
             statusBadge.style.background = 'rgba(255, 71, 87, 0.15)';
-            statusText.innerText = `警戒極高 - DEFCON 1 (戰術危機臨界/海空封鎖)`;
-        } else if (redPercent >= 35) {
+            statusText.innerText = `極度危機 - DEFCON 2 (臨戰動員與非動能電磁打擊)`;
+        } else if (redPercent >= 50) {
             statusBadge.style.borderColor = 'var(--color-yellow)';
             statusBadge.style.color = 'var(--color-yellow)';
             statusBadge.style.background = 'rgba(255, 165, 2, 0.15)';
-            statusText.innerText = `警戒升高 - DEFCON 2 (灰帶與動員預警中)`;
+            statusText.innerText = `警戒升高 - DEFCON 2 (大規模演習轉準封鎖)`;
+        } else if (redPercent >= 25) {
+            statusBadge.style.borderColor = 'var(--color-yellow)';
+            statusBadge.style.color = 'var(--color-yellow)';
+            statusBadge.style.background = 'rgba(255, 165, 2, 0.1)';
+            statusText.innerText = `灰帶升高 - DEFCON 3 (法律戰與海警強制臨檢)`;
         } else {
             statusBadge.style.borderColor = 'var(--color-green)';
             statusBadge.style.color = 'var(--color-green)';
             statusBadge.style.background = 'rgba(46, 213, 115, 0.15)';
-            statusText.innerText = `系統運作中 - DEFCON 4 (常態監視階段)`;
+            statusText.innerText = `系統運作中 - DEFCON 4 (潛伏塑形與常態監視)`;
         }
 
-        if (redPercent >= 75 && currentPhase < 3) {
-            currentPhase = 3;
-            renderScenarioStepper();
-        } else if (redPercent >= 35 && redPercent < 75 && currentPhase !== 2) {
-            currentPhase = 2;
-            renderScenarioStepper();
-        } else if (redPercent < 35 && currentPhase !== 1) {
-            currentPhase = 1;
+        let newPhase = 1;
+        if (redPercent >= 130) newPhase = 6;
+        else if (redPercent >= 100) newPhase = 5;
+        else if (redPercent >= 75) newPhase = 4;
+        else if (redPercent >= 50) newPhase = 3;
+        else if (redPercent >= 25) newPhase = 2;
+        else newPhase = 1;
+
+        if (newPhase !== currentPhase) {
+            currentPhase = newPhase;
             renderScenarioStepper();
         }
 
@@ -281,6 +400,143 @@ document.addEventListener('DOMContentLoaded', () => {
         krFill.style.background = krValBox.style.color;
 
         renderAnnexActions(redPercent);
+    }
+
+    // ==========================================
+    // 亞太戰術態勢地圖 (Situation Map) 互動
+    // ==========================================
+    function initSituationMap() {
+        const nodes = document.querySelectorAll('.map-node');
+        const titleEl = document.getElementById('map-info-title');
+        const bodyEl = document.getElementById('map-info-body');
+
+        const nodeDataMap = {
+            taiwan: {
+                title: '🇹🇼 臺灣戰術核心：防衛海峽與全社會韌性',
+                body: `
+                    <div style="line-height:1.6; color:var(--text-primary);">
+                        <p style="margin-bottom:10px;"><strong>戰略定位：</strong>第一島鏈關鍵樞紐，重層嚇阻與全社會防衛體系前線。</p>
+                        <p style="margin-bottom:10px;"><strong>關鍵防護標的：</strong>淡水、頭城、枋山三大海纜登陸站，14條國際海底光纖，台積電先進製程晶圓廠與去中心化備援指揮所 (NCA)。</p>
+                        <div class="map-stats-summary" style="margin-top:12px;">
+                            <div class="stat-mini-card">
+                                <span class="stat-lbl">受限附件備援狀態</span>
+                                <span class="stat-val color-cyan">附件 A-G 常態運作</span>
+                            </div>
+                            <div class="stat-mini-card">
+                                <span class="stat-lbl">LEO 衛星頻寬儲備</span>
+                                <span class="stat-val color-green">星鏈 / 國研備援</span>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            china: {
+                title: '🇨🇳 紅方作戰部署：東部戰區與火箭軍前緣陣地',
+                body: `
+                    <div style="line-height:1.6; color:var(--text-primary);">
+                        <p style="margin-bottom:10px;"><strong>主力部隊：</strong>東部戰區第71, 72, 73集團軍、東海艦隊主力與火箭軍常導基地。</p>
+                        <p style="margin-bottom:10px;"><strong>預警觀察重點：</strong>主力艦艇集中出港率 (Metric 3)、東部陣地戰術飛彈填裝前運 (Metric 2) 與民用滾裝船集結 (Metric 25)。</p>
+                        <div class="map-stats-summary" style="margin-top:12px;">
+                            <div class="stat-mini-card">
+                                <span class="stat-lbl">海空禁航區劃設</span>
+                                <span class="stat-val color-red">高風險監測中</span>
+                            </div>
+                            <div class="stat-mini-card">
+                                <span class="stat-lbl">ASAT 反衛星試探</span>
+                                <span class="stat-val color-yellow">共軌雷射致盲警戒</span>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            japan: {
+                title: '🇯🇵 日本西南諸島與沖繩防線',
+                body: `
+                    <div style="line-height:1.6; color:var(--text-primary);">
+                        <p style="margin-bottom:10px;"><strong>關鍵陣地：</strong>與那國島、石垣島、宮古島與沖繩本島美自衛隊聯防基地。</p>
+                        <p style="margin-bottom:10px;"><strong>戰略防衛：</strong>部署 PAC-3 防空飛彈與 12 式反艦飛彈，啟動「國民保護法」實施離島物資防禦與緊急避難。</p>
+                        <div class="map-stats-summary" style="margin-top:12px;">
+                            <div class="stat-mini-card">
+                                <span class="stat-lbl">同盟機制門檻</span>
+                                <span class="stat-val color-cyan">美日安保第 5 條</span>
+                            </div>
+                            <div class="stat-mini-card">
+                                <span class="stat-lbl">西南諸島避難整備</span>
+                                <span class="stat-val color-yellow">國民保護法準備</span>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            korea: {
+                title: '🇰🇷 朝鮮半島 DMZ 戰場與北韓第二戰場',
+                body: `
+                    <div style="line-height:1.6; color:var(--text-primary);">
+                        <p style="margin-bottom:10px;"><strong>戰略角力：</strong>北韓配合紅方於 DMZ 部署砲兵群與發射洲際飛彈，牽制駐韓美軍 (USFK) 轉移。</p>
+                        <p style="margin-bottom:10px;"><strong>美韓同盟：</strong>維持 DEFCON 高階戰備，阻絕兩線戰場外溢與漢城首都圈直接安全威脅。</p>
+                        <div class="map-stats-summary" style="margin-top:12px;">
+                            <div class="stat-mini-card">
+                                <span class="stat-lbl">DMZ 警戒等級</span>
+                                <span class="stat-val color-red">DEFCON 2 升級中</span>
+                            </div>
+                            <div class="stat-mini-card">
+                                <span class="stat-lbl">駐韓美軍資產</span>
+                                <span class="stat-val color-green">第一線戰略嚇阻</span>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            scs: {
+                title: '🇵🇭 南海島礁與巴士海峽生命線',
+                body: `
+                    <div style="line-height:1.6; color:var(--text-primary);">
+                        <p style="margin-bottom:10px;"><strong>戰術航道：</strong>巴士海峽與巴林塘海峽為國際海運與台灣南部關鍵戰略水域。</p>
+                        <p style="margin-bottom:10px;"><strong>印太聯動：</strong>中菲仁愛礁衝突與《美菲共同防衛條約 (MDT)》連動，防止紅方切斷南海貿易航線。</p>
+                        <div class="map-stats-summary" style="margin-top:12px;">
+                            <div class="stat-mini-card">
+                                <span class="stat-lbl">海運貿易涵蓋</span>
+                                <span class="stat-val color-cyan">全球 30% 通過量</span>
+                            </div>
+                            <div class="stat-mini-card">
+                                <span class="stat-lbl">美菲 MDT 條約</span>
+                                <span class="stat-val color-yellow">準軍事護航觸發點</span>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            guam: {
+                title: '🇺🇸 美軍印太第二島鏈與關島打擊樞紐',
+                body: `
+                    <div style="line-height:1.6; color:var(--text-primary);">
+                        <p style="margin-bottom:10px;"><strong>主力基地：</strong>安德森空軍基地 (Andersen AFB) 與關島海軍基地，美軍第七艦隊第5航艦打擊群 (CSG-5)。</p>
+                        <p style="margin-bottom:10px;"><strong>遠程戰術：</strong>部署 B-21/B-2 匿蹤轟炸機與 LRASM 遠程反艦飛彈，提供第二島鏈強固戰略後援。</p>
+                        <div class="map-stats-summary" style="margin-top:12px;">
+                            <div class="stat-mini-card">
+                                <span class="stat-lbl">航艦打擊群打擊力</span>
+                                <span class="stat-val color-green">CSG-5 移防警戒</span>
+                            </div>
+                            <div class="stat-mini-card">
+                                <span class="stat-lbl">太空態勢感知 (SSA)</span>
+                                <span class="stat-val color-cyan">全時段全域涵蓋</span>
+                            </div>
+                        </div>
+                    </div>
+                `
+            }
+        };
+
+        nodes.forEach(node => {
+            node.addEventListener('click', () => {
+                const nodeKey = node.getAttribute('data-node');
+                const info = nodeDataMap[nodeKey];
+                if (info && titleEl && bodyEl) {
+                    titleEl.innerText = info.title;
+                    bodyEl.innerHTML = info.body;
+                }
+            });
+        });
     }
 
     function renderAnnexActions(redPercent) {
@@ -564,31 +820,30 @@ document.addEventListener('DOMContentLoaded', () => {
             if (typeof marked !== 'undefined' && marked.parse) {
                 viewFull.innerHTML = `<div class="markdown-rendered-body">${marked.parse(mdText)}</div>`;
                 
-                // 處理並動態繪製 Mermaid 視覺化流程圖
-                if (typeof mermaid !== 'undefined') {
-                    const mermaidCodes = viewFull.querySelectorAll('code.language-mermaid');
-                    if (mermaidCodes.length > 0) {
-                        mermaidCodes.forEach((codeNode) => {
-                            const preNode = codeNode.parentElement;
-                            const div = document.createElement('div');
-                            div.className = 'mermaid';
-                            div.textContent = codeNode.textContent;
-                            if (preNode && preNode.parentNode) {
-                                preNode.parentNode.replaceChild(div, preNode);
-                            }
-                        });
+                // 處理並動態繪製 Mermaid 視覺化流程圖 (按需懶載入)
+                const mermaidCodes = viewFull.querySelectorAll('code.language-mermaid');
+                if (mermaidCodes.length > 0) {
+                    mermaidCodes.forEach((codeNode) => {
+                        const preNode = codeNode.parentElement;
+                        const div = document.createElement('div');
+                        div.className = 'mermaid';
+                        div.textContent = codeNode.textContent;
+                        if (preNode && preNode.parentNode) {
+                            preNode.parentNode.replaceChild(div, preNode);
+                        }
+                    });
 
-                        setTimeout(async () => {
-                            try {
-                                const nodes = viewFull.querySelectorAll('.mermaid');
-                                if (nodes.length > 0) {
-                                    await mermaid.run({ nodes: nodes });
-                                }
-                            } catch (mErr) {
-                                console.warn('Mermaid diagram render error:', mErr);
+                    setTimeout(async () => {
+                        try {
+                            await ensureMermaidLoaded();
+                            const nodes = viewFull.querySelectorAll('.mermaid');
+                            if (nodes.length > 0 && typeof mermaid !== 'undefined') {
+                                await mermaid.run({ nodes: nodes });
                             }
-                        }, 100);
-                    }
+                        } catch (mErr) {
+                            console.warn('Mermaid diagram render error:', mErr);
+                        }
+                    }, 50);
                 }
             } else {
                 // Fallback: 預覽原始 text

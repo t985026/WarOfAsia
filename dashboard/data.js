@@ -12,7 +12,7 @@ window.WAR_DATA = {
             title: '大規模演習與海空禁航區劃設',
             desc: '紅方於臺灣海峽、東海或南海大規模劃設海空禁航區，進入準封鎖狀態。',
             weight: 9,
-            realWorldBaseline: '美日情報聯合評估高風險',
+            realWorldBaseline: '美日情報聯合評估高風險 (CSIS 兵推核心指標)',
             level: 'green'
         },
         {
@@ -21,8 +21,8 @@ window.WAR_DATA = {
             categoryName: '軍事與動員',
             title: '戰術飛彈與火箭軍部署前緣陣地',
             desc: '東部及南部戰區火箭軍陣地出現車輛集結、彈藥前運與頻率異常。',
-            weight: 9,
-            realWorldBaseline: '火箭軍陣地前運動態',
+            weight: 10,
+            realWorldBaseline: '火箭軍陣地填裝動態 (美軍印太司令部 SSA 頂級預警)',
             level: 'green'
         },
         {
@@ -32,7 +32,7 @@ window.WAR_DATA = {
             title: '海軍主力艦艇集中出港率 > 85%',
             desc: '三大艦隊主力作戰艦艇大規模離開基地，登陸艦群與民用滾裝船集結。',
             weight: 10,
-            realWorldBaseline: '滾裝船與登陸艦集結',
+            realWorldBaseline: '滾裝船與三大艦隊出港 (RAND 封鎖與登陸臨界點)',
             level: 'green'
         },
         {
@@ -41,8 +41,8 @@ window.WAR_DATA = {
             categoryName: '軍事與動員',
             title: '預備役與野戰醫療集結調度',
             desc: '沿海省份動員預備役人員，後勤醫院空出病床與調集大量戰傷血庫。',
-            weight: 8,
-            realWorldBaseline: '戰時野戰醫療血庫徵調',
+            weight: 9,
+            realWorldBaseline: '戰時野戰醫療血庫徵調 (俄烏戰爭經驗核心驗證點)',
             level: 'green'
         },
         {
@@ -62,7 +62,7 @@ window.WAR_DATA = {
             title: '大宗原油、鐵礦與糧食異常囤積',
             desc: '紅方連續數月激增原油、鐵礦砂與戰略糧食進口，並封鎖出口統計。',
             weight: 8,
-            realWorldBaseline: '國家戰略物資備用天數激增',
+            realWorldBaseline: '國家戰略物資備用天數激增 (長期抗封鎖準備)',
             level: 'green'
         },
         {
@@ -71,8 +71,8 @@ window.WAR_DATA = {
             categoryName: '經濟與戰略物資',
             title: '外資與外企資產連日異常抽離',
             desc: '跨國金融機構啟動避險機制，外資拋售股債並清算實體資產。',
-            weight: 7,
-            realWorldBaseline: '資本流出與金融機構避險',
+            weight: 8,
+            realWorldBaseline: '資本流出與金融機構避險 (跨國保險公司停保警訊)',
             level: 'green'
         },
         {
@@ -92,7 +92,7 @@ window.WAR_DATA = {
             title: '關鍵半導體與高科技零組件管制',
             desc: '實施雙向技術出口管制，限縮稀土出口並扣押境內外資設備。',
             weight: 7,
-            realWorldBaseline: '稀土與關鍵金屬禁運管制',
+            realWorldBaseline: '稀土與關鍵金屬禁運管制 (經濟戰反制門檻)',
             level: 'green'
         },
         {
@@ -101,7 +101,7 @@ window.WAR_DATA = {
             categoryName: '經濟與戰略物資',
             title: '國內民生經濟民怨與戰爭轉移風險',
             desc: '房地產與地方債危機加劇，高層試圖透過對外軍事冒險轉移內部壓力。',
-            weight: 8,
+            weight: 7,
             realWorldBaseline: '內部經濟矛盾對外冒險轉移',
             level: 'green'
         },
@@ -112,7 +112,7 @@ window.WAR_DATA = {
             title: '跨境 VPN / eSIM 數據流量異常飆升',
             desc: '灰色通訊通道流量激增，伴隨未授權高權限帳號登入嘗試。',
             weight: 8,
-            realWorldBaseline: '跨境灰色漫遊與代理登入監測',
+            realWorldBaseline: '跨境灰色漫遊與代理登入監測 (資訊前導滲透)',
             level: 'green'
         },
         {
@@ -122,7 +122,7 @@ window.WAR_DATA = {
             title: '海底電纜與微波站實體/網路威脅',
             desc: '主要海底電纜登陸站遭遇 DDoS 攻擊，周邊海域水下無人機活動頻繁。',
             weight: 9,
-            realWorldBaseline: '海纜登陸站實體/數位安全防護',
+            realWorldBaseline: '海纜登陸站實體/數位安全防護 (資訊盲區創造點)',
             level: 'green'
         },
         {
@@ -142,7 +142,7 @@ window.WAR_DATA = {
             title: '關鍵基礎設施 (CI) 資安入侵警報',
             desc: '電網、水利、金融系統偵測到零日漏洞 (Zero-day) 潛伏惡意程式。',
             weight: 9,
-            realWorldBaseline: '電網水利系統零日漏洞攻擊',
+            realWorldBaseline: '電網水利系統零日漏洞攻擊 (關鍵網絡麻痺指標)',
             level: 'green'
         },
         {
@@ -161,8 +161,8 @@ window.WAR_DATA = {
             categoryName: '資訊與認知作戰',
             title: '朝鮮半島 DMZ 與黃海軍事挑釁連動',
             desc: '北韓配合發射洲際飛彈或於黃海劃設警戒區，牽制駐韓美軍。',
-            weight: 7,
-            realWorldBaseline: '北韓 DMZ 飛彈試射牽制連動',
+            weight: 8,
+            realWorldBaseline: '北韓 DMZ 飛彈試射牽制連動 (雙重戰場開闢指標)',
             level: 'green'
         },
         {
@@ -174,6 +174,196 @@ window.WAR_DATA = {
             weight: 6,
             realWorldBaseline: '安理會否決權與國際法外交阻撓',
             level: 'green'
+        },
+        {
+            id: 'm18',
+            category: 'diplomatic',
+            categoryName: '外交與國際法',
+            title: '駐外使館與主要國家發布撤僑預告/警示',
+            desc: '各國駐台/駐東亞使館開始評估撤僑計畫，非必要人員分批離境。',
+            weight: 9,
+            realWorldBaseline: '駐外使館撤僑準備 (五眼聯盟與美日國際情報高確信點)',
+            level: 'green'
+        },
+        {
+            id: 'm19',
+            category: 'diplomatic',
+            categoryName: '外交與國際法',
+            title: '法律戰與單方面主張海峽內水化宣告',
+            desc: '紅方發布單方面法令宣告臺海為內水，企圖打擊國際自由航行合法性。',
+            weight: 7,
+            realWorldBaseline: '國際法法律戰與海域管轄權爭議',
+            level: 'green'
+        },
+        {
+            id: 'm20',
+            category: 'diplomatic',
+            categoryName: '外交與國際法',
+            title: '國際外交極致孤立與區域論壇安理會牽制',
+            desc: '施壓邦交國斷交，於東協 (ASEAN) 與 G20 阻撓同盟聯合聲明發表。',
+            weight: 6,
+            realWorldBaseline: '邦交國施壓與區域論壇外交封鎖',
+            level: 'green'
+        },
+        {
+            id: 'm21',
+            category: 'space',
+            categoryName: '太空與電磁領域',
+            title: '反衛星 (ASAT) 軌道機動與雷射致盲嘗試',
+            desc: '紅方殺手衛星進行異常近距離軌道靠近，地基高能雷射試探監偵衛星。',
+            weight: 9,
+            realWorldBaseline: '共軌殺手衛星機動與雷射致盲 (太空第一打擊)',
+            level: 'green'
+        },
+        {
+            id: 'm22',
+            category: 'space',
+            categoryName: '太空與電磁領域',
+            title: 'GPS/GNSS 區域強干擾與欺騙信號涵蓋率激增',
+            desc: '第一島鏈周邊海空域 GPS 訊號大面積失真，導向飛彈與民航導向受干擾。',
+            weight: 8,
+            realWorldBaseline: '電磁脈衝與 GPS 區域欺騙干擾 (導航與飛彈精準度試探)',
+            level: 'green'
+        },
+        {
+            id: 'm23',
+            category: 'space',
+            categoryName: '太空與電磁領域',
+            title: '低軌衛星 (LEO) 通訊頻道強干擾與太空碎片警報',
+            desc: '星鏈 (Starlink) 與國研衛星通訊頻率受電磁脈衝干擾，軌道碎片威脅升高。',
+            weight: 8,
+            realWorldBaseline: 'LEO 衛星頻段電磁干擾與 SSA 警報',
+            level: 'green'
+        },
+        {
+            id: 'm24',
+            category: 'military',
+            categoryName: '軍事與動員',
+            title: '核潛艦集中出航與戰略打擊力量提升警戒',
+            desc: '戰略核潛艦 (SSBN) 離開基地進入深海潛航，戰略火箭軍進入一級戰備。',
+            weight: 10,
+            realWorldBaseline: 'SSBN 戰略巡航與核威懾防線升級 (全球最高安全級別)',
+            level: 'green'
+        },
+        {
+            id: 'm25',
+            category: 'military',
+            categoryName: '軍事與動員',
+            title: '兩棲登陸艦群與徵調徵用萬噸民用滾裝船動員',
+            desc: '沿海港口大規模集結滾裝貨輪 (Ro-Ro ship) 與兩棲船塢登陸艦。',
+            weight: 9,
+            realWorldBaseline: '萬噸滾裝船民物軍用集結徵調 (兩棲登陸必備運量)',
+            level: 'green'
+        },
+        {
+            id: 'm26',
+            category: 'economy',
+            categoryName: '經濟與戰略物資',
+            title: 'SWIFT 跨境結算異常與去美元化/離岸金庫移轉',
+            desc: '大額資金快速繞過 SWIFT 移至 CIPS 或離岸黃金，規避潛在金融凍結。',
+            weight: 8,
+            realWorldBaseline: '金融去美元化與離岸避險結算 (反金融制裁前置準備)',
+            level: 'green'
+        },
+        {
+            id: 'm27',
+            category: 'economy',
+            categoryName: '經濟與戰略物資',
+            title: '關鍵能源(LNG/原油)安全存量監測下降至警戒線',
+            desc: '海上能源運輸線遭干擾，藍方液化天然氣與原油備用天數逼近臨界點。',
+            weight: 9,
+            realWorldBaseline: 'LNG 安全存量與能源物資中斷 (封鎖脆弱性最快顯現點)',
+            level: 'green'
+        },
+        {
+            id: 'm28',
+            category: 'infowar',
+            categoryName: '資訊與認知作戰',
+            title: '生成式 AI 深偽 (Deepfake) 影音與假訊息蓋台攻勢',
+            desc: 'AI 生成元首降書與虛構敗退影片於廣播電視與社群平台大面積播送。',
+            weight: 8,
+            realWorldBaseline: 'AIGC 深偽蓋台與認知迫降戰',
+            level: 'green'
+        },
+        {
+            id: 'm29',
+            category: 'infowar',
+            categoryName: '資訊與認知作戰',
+            title: '境外代理人與關鍵鏈路實體破壞/騷擾頻率激增',
+            desc: '特種潛伏人員嘗試對微波站、變電所與水廠執行物理破壞與縱火。',
+            weight: 8,
+            realWorldBaseline: '潛伏代理人實體破壞與防衛破綻',
+            level: 'green'
+        },
+        {
+            id: 'm30',
+            category: 'society',
+            categoryName: '社會與民心',
+            title: '全社會防衛體系動員與關鍵民生物資儲備監測',
+            desc: '民防避難所整備率、戰時醫療救護量能與全民抗敵防衛意志動態。',
+            weight: 7,
+            realWorldBaseline: '全社會防衛韌性與民防整備量能',
+            level: 'green'
+        },
+        {
+            id: 'm31',
+            category: 'diplomatic',
+            categoryName: '外交與國際法',
+            title: '海警法借位管理與海峽外國貨船強制臨檢',
+            desc: '紅方海警船以海事安全管理與海警法執法為名，強行對過往臺灣海峽及周邊海域之外國商船與特種貨輪實施強制登檢與干擾，推進灰帶執法常態化。',
+            weight: 9,
+            realWorldBaseline: '海警法授權與海峽外船強制臨檢常態化 (灰帶封鎖突破門檻)',
+            level: 'green'
+        },
+        {
+            id: 'm32',
+            category: 'society',
+            categoryName: '社會與民心',
+            title: '限制國人與關鍵高科技技術人員出境',
+            desc: '紅方修訂國安法規，實施廣泛出境審查，限制涉密專家、高科技人員、軍工幹部及部分公民離境，啟動戰時人員監控與邊境管制。',
+            weight: 8,
+            realWorldBaseline: '出境管制擴大與涉密人員限制離境 (內部戰備封鎖強指標)',
+            level: 'green'
+        },
+        {
+            id: 'm33',
+            category: 'diplomatic',
+            categoryName: '外交與國際法',
+            title: '海外懲獨名單長臂管轄與跨國司法恐嚇',
+            desc: '發布懲治清單並動用海外警務站與司法長臂管轄，對藍方政要、軍工及企業家發動跨國恐嚇與資產凍結嘗試。',
+            weight: 7,
+            realWorldBaseline: '懲獨長臂管轄與海外警務站威懾',
+            level: 'green'
+        },
+        {
+            id: 'm34',
+            category: 'military',
+            categoryName: '軍事與動員',
+            title: '海上民兵與鋼殼拖船灰色封鎖與港口干擾',
+            desc: '數百艘海上民兵船隻與特種拖船於臺灣主要港口周邊水域集結，以「作業與避風」為名發動準封鎖與防區航道干擾。',
+            weight: 8,
+            realWorldBaseline: '海上民兵與特種拖船港口圍堵 (非熱戰準封鎖)',
+            level: 'green'
+        },
+        {
+            id: 'm35',
+            category: 'economy',
+            categoryName: '經濟與戰略物資',
+            title: '港口海運 AIS 訊號蓋台與經濟數據保密黑箱',
+            desc: '沿海港口集裝箱吞吐量、大宗原油進口量與 AIS 船舶即時定位數據全面停止對外發布，進入戰時經濟數據黑箱。',
+            weight: 8,
+            realWorldBaseline: 'AIS 訊號中斷與大宗進口數據保密 (資訊掩蓋前兆)',
+            level: 'green'
+        },
+        {
+            id: 'm36',
+            category: 'infowar',
+            categoryName: '資訊與認知作戰',
+            title: '跨境海纜修復船阻撓與多點實體斷纜頻發',
+            desc: '海纜遭切斷後阻撓國際海纜修復船進入警戒海域，配合資安與電磁攻勢企圖創造長時間資訊孤島。',
+            weight: 9,
+            realWorldBaseline: '海纜修復船阻撓與資訊孤島化 (資訊封鎖核心手段)',
+            level: 'green'
         }
     ],
 
@@ -181,21 +371,45 @@ window.WAR_DATA = {
     scenarios: [
         {
             phase: 1,
-            name: '階段一：灰帶威脅與預警指標亮燈',
-            desc: '紅方啟動「戰狼政策」與多面向灰色地帶襲擾，17 項指標中軍事與資訊燈號陸續由綠轉黃。藍方啟動國安預警機制與情報共享。',
-            threshold: 20
+            name: '階段一：潛伏塑形與戰略灰色襲擾 (T-90d ~ T-30d)',
+            desc: '紅方啟動「戰狼政策」、海外長臂管轄、AIS數據保密、VPN/eSIM灰色網絡與出境管制，試圖創造資訊前導優勢。藍方啟動國安情報常態監偵與受限附件 C 零信任驗證。',
+            threshold: 0,
+            defcon: 'DEFCON 4 (常態監視)'
         },
         {
             phase: 2,
-            name: '階段二：海空隔離與關鍵基礎設施切斷',
-            desc: '紅方以演習名義實施海空實彈封鎖，切斷海底電纜與微波站。臺灣與日本西南諸島面臨能源與物流中斷風險。藍方啟動受限附件 A-E 備援處方。',
-            threshold: 50
+            name: '階段二：法律戰內水化與海警強制臨檢 (T-30d ~ T-14d)',
+            desc: '紅方宣告臺海內水化，海警船與民兵拖船於海峽強行臨檢外國貨船與圍堵港口。藍方啟動受限附件 G 外交法律戰與自由航行國際共同聲明。',
+            threshold: 25,
+            defcon: 'DEFCON 3 (黃燈警戒)'
         },
         {
             phase: 3,
-            name: '階段三：多國聯防與朝鮮半島雙重戰場外溢',
-            desc: '危機升高為區域衝突。日本啟動國民保護法與自衛隊動員；美軍啟動印太快速反應；北韓於 DMZ 啟動第二戰場牽制韓國。',
-            threshold: 75
+            name: '階段三：大規模海空演習轉準封鎖 (T-14d ~ T-72h)',
+            desc: '三大艦隊主力集中出港，劃設多處實彈海空禁航區，大宗能源 LNG 備用天數下降。藍方啟動受限附件 B 戰略物資管制與微電網應變。',
+            threshold: 50,
+            defcon: 'DEFCON 2 (橘燈高度戰備)'
+        },
+        {
+            phase: 4,
+            name: '階段四：臨戰動員與非動能電磁資安打擊 (T-72h ~ T-0)',
+            desc: '火箭軍陣地填裝前運、戰傷血庫與萬噸滾裝船動員，發動 AIGC 深偽蓋台與海纜切斷。藍方啟動受限附件 A 去中心化 NCA 與受限附件 E 衛星頻寬接管。',
+            threshold: 75,
+            defcon: 'DEFCON 2 (紅燈臨戰臨界)'
+        },
+        {
+            phase: 5,
+            name: '階段五：全面海空封鎖與第一島鏈同盟介入 (T+0 ~ T+7d)',
+            desc: '紅方實施飽和飛彈齊射與太空 ASAT 致盲，美日啟動安保條約第 5 條與護航走廊，西南諸島啟動國民保護法。藍方啟動受限附件 F 太空防護與全社會防禦抵抗。',
+            threshold: 100,
+            defcon: 'DEFCON 1 (戰事爆發/全面對抗)'
+        },
+        {
+            phase: 6,
+            name: '階段六：朝鮮半島第二戰場外溢與全球經濟戰 (T+7d ~ T+30d)',
+            desc: '北韓於 DMZ 發起軍事挑釁牽制美韓同盟，同盟實施全面 SWIFT 切斷與半導體禁運，區域進入長久對峙與外交停火談判。',
+            threshold: 130,
+            defcon: 'DEFCON 1 (區域大戰與全球經濟戰)'
         }
     ],
 
@@ -254,6 +468,28 @@ window.WAR_DATA = {
                 '切換至低軌衛星 (LEO) 與中軌衛星 (MEO) 緊急頻寬',
                 '啟動跨海峽微波站備援對點連線',
                 '優先保障軍政與民生應急通訊頻寬配額'
+            ]
+        },
+        {
+            id: 'annexF',
+            name: '受限附件 F：太空與衛星防護應變處方',
+            triggerScore: 50,
+            status: '待命',
+            actions: [
+                '啟動 eLoran 地基備援導航與光纖慣導對接',
+                '切換 Starlink / Starshield 優先軍用加密頻段',
+                '發布 ASAT 衛星致盲反制與軌道機動保護指令'
+            ]
+        },
+        {
+            id: 'annexG',
+            name: '受限附件 G：外交法律戰與國際動員處方',
+            triggerScore: 35,
+            status: '待命',
+            actions: [
+                '啟動聯合國 UN 國際法法庭與海事組織訴求宣示',
+                '與美日菲印太同盟建立 24/7 緊急撤僑與安全通道',
+                '反制紅方內水化主張，發布自由航行國際共同聲明'
             ]
         }
     ],

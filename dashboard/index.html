@@ -38,6 +38,7 @@
     <!-- 戰略功能頁籤導覽 Bar -->
     <nav class="nav-tabs-bar">
         <button class="nav-tab active" data-tab="tab-dashboard">🚨 預警與戰情儀表板</button>
+        <button class="nav-tab" data-tab="tab-map">🗺️ 亞太戰術態勢地圖</button>
         <button class="nav-tab" data-tab="tab-timeline">🌐 四國聯合兵棋時間軸 (T-90 ~ T+30)</button>
         <button class="nav-tab" data-tab="tab-library">🔬 專題研究與劇本圖書館</button>
         <button class="nav-tab" data-tab="tab-simulator">⚔️ 戰略決策樹兵推模擬器</button>
@@ -49,15 +50,42 @@
         <!-- ==================== TAB 1: 預警與戰情儀表板 ==================== -->
         <main class="dashboard-container tab-pane active" id="tab-dashboard">
 
-            <!-- 左欄：17項預警指標控制台 -->
+            <!-- 左欄：36項預警指標控制台 -->
             <section class="panel-card left-panel">
                 <div class="panel-header">
-                    <h2>🚨 17 項預警指標控制台</h2>
+                    <h2>🚨 36 項預警指標控制台</h2>
                     <button class="btn-toggle" id="btn-reset-all" style="flex:none; padding:4px 10px;">全部重置</button>
                 </div>
-                <p style="font-size:0.78rem; color:var(--text-secondary); margin-bottom:12px;">
-                    點擊指標右側切換鈕（綠/黃/紅），動態運算紅藍方攻防指數與外溢風險：
-                </p>
+
+                <!-- 指標即時統計晶片與一鍵情境預設 -->
+                <div class="metric-summary-toolbar">
+                    <div class="summary-chips-row">
+                        <span class="chip green" id="chip-green-count">🟢 綠燈: 36</span>
+                        <span class="chip yellow" id="chip-yellow-count">🟡 黃燈: 0</span>
+                        <span class="chip red" id="chip-red-count">🔴 紅燈: 0</span>
+                    </div>
+                    <div class="preset-buttons-row">
+                        <span class="preset-label">⚡ 快速情境：</span>
+                        <button class="btn-preset" data-preset="normal">🟢 平時常態</button>
+                        <button class="btn-preset" data-preset="grayzone">🟡 灰帶升級</button>
+                        <button class="btn-preset" data-preset="crisis">🔴 全面危機</button>
+                    </div>
+                    <div style="font-size:0.72rem; color:var(--text-secondary); margin-top:2px;">
+                        💡 註：危機指數採累積門檻機制，符合數項關鍵核心條件即觸發 100% 危機，極限可超越 100%。
+                    </div>
+                </div>
+
+                <!-- 分類篩選列 -->
+                <div class="metric-category-filters" id="metric-cat-filters">
+                    <button class="metric-cat-btn active" data-cat="all">全部 (36)</button>
+                    <button class="metric-cat-btn" data-cat="military">軍事動員</button>
+                    <button class="metric-cat-btn" data-cat="economy">經濟物資</button>
+                    <button class="metric-cat-btn" data-cat="infowar">資訊認知</button>
+                    <button class="metric-cat-btn" data-cat="diplomatic">外交國際法</button>
+                    <button class="metric-cat-btn" data-cat="space">太空電磁</button>
+                    <button class="metric-cat-btn" data-cat="society">社會民心</button>
+                </div>
+
                 <div class="warning-controls-list" id="warning-list-container">
                     <!-- JS 動態渲染指標卡片 -->
                 </div>
@@ -148,7 +176,163 @@
 
         </main>
 
-        <!-- ==================== TAB 2: 四國聯合兵棋時間軸 (Timeline Player) ==================== -->
+        <!-- ==================== TAB 2: 亞太戰術態勢地圖 (Situation Map) ==================== -->
+        <div class="tab-pane single-pane-container" id="tab-map">
+            <div class="panel-card full-width-card">
+                <div class="panel-header">
+                    <h2>🗺️ 亞太區域地緣衝突與戰術態勢地圖 (Asia-Pacific Situation Map)</h2>
+                    <div class="map-legend-bar">
+                        <span class="legend-item"><span class="legend-dot red"></span> 🔴 紅方主攻/前緣封鎖</span>
+                        <span class="legend-item"><span class="legend-dot blue"></span> 🇹🇼 臺灣全社會防禦網</span>
+                        <span class="legend-item"><span class="legend-dot yellow"></span> 🇯🇵 日本西南諸島樞紐</span>
+                        <span class="legend-item"><span class="legend-dot green"></span> 🇰🇷 韓國與 DMZ 第一線</span>
+                        <span class="legend-item"><span class="legend-dot cyan"></span> 🇺🇸 美軍印太第一/二島鏈</span>
+                    </div>
+                </div>
+
+                <div class="map-dashboard-grid">
+                    <!-- SVG 地圖繪製區 -->
+                    <div class="map-viewport-card">
+                        <svg class="asia-svg-map" viewBox="0 0 1000 650" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <radialGradient id="oceanGrad" cx="50%" cy="50%" r="50%">
+                                    <stop offset="0%" stop-color="#0a1224" />
+                                    <stop offset="100%" stop-color="#050811" />
+                                </radialGradient>
+                                <filter id="glowRed" x="-20%" y="-20%" width="140%" height="140%">
+                                    <feGaussianBlur stdDeviation="6" result="blur" />
+                                    <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                                </filter>
+                                <filter id="glowCyan" x="-20%" y="-20%" width="140%" height="140%">
+                                    <feGaussianBlur stdDeviation="6" result="blur" />
+                                    <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                                </filter>
+                            </defs>
+
+                            <!-- 海洋背景 -->
+                            <rect width="1000" height="650" fill="url(#oceanGrad)" />
+
+                            <!-- 網格與緯度線 -->
+                            <g stroke="rgba(0, 210, 211, 0.07)" stroke-width="1" stroke-dasharray="4,4">
+                                <line x1="0" y1="130" x2="1000" y2="130" />
+                                <line x1="0" y1="260" x2="1000" y2="260" />
+                                <line x1="0" y1="390" x2="1000" y2="390" />
+                                <line x1="0" y1="520" x2="1000" y2="520" />
+                                <line x1="200" y1="0" x2="200" y2="650" />
+                                <line x1="400" y1="0" x2="400" y2="650" />
+                                <line x1="600" y1="0" x2="600" y2="650" />
+                                <line x1="800" y1="0" x2="800" y2="650" />
+                            </g>
+
+                            <!-- 陸地與島鏈輪廓示意圖 -->
+                            <!-- 中國大陸 -->
+                            <path d="M 50,80 Q 220,90 350,150 T 430,380 T 300,550 T 50,600 Z" fill="rgba(255, 71, 87, 0.08)" stroke="rgba(255, 71, 87, 0.25)" stroke-width="1.5" />
+                            <!-- 朝鮮半島 -->
+                            <path d="M 430,110 Q 480,100 500,160 T 480,240 T 440,200 Z" fill="rgba(46, 213, 115, 0.08)" stroke="rgba(46, 213, 115, 0.3)" stroke-width="1.5" />
+                            <!-- 日本本土 -->
+                            <path d="M 550,80 Q 650,100 720,180 T 640,260 T 540,160 Z" fill="rgba(255, 165, 2, 0.08)" stroke="rgba(255, 165, 2, 0.3)" stroke-width="1.5" />
+                            <!-- 西南諸島 (沖繩/石垣/與那國) -->
+                            <path d="M 480,310 L 530,350 L 560,390" fill="none" stroke="rgba(255, 165, 2, 0.5)" stroke-width="2" stroke-dasharray="3,3" />
+                            <!-- 臺灣本島 -->
+                            <path d="M 430,380 Q 455,395 448,460 Q 425,465 430,380 Z" fill="rgba(30, 144, 255, 0.25)" stroke="rgba(0, 210, 211, 0.8)" stroke-width="2" filter="url(#glowCyan)" />
+                            <!-- 菲律賓群島 -->
+                            <path d="M 430,510 Q 480,530 460,630 T 410,580 Z" fill="rgba(0, 210, 211, 0.08)" stroke="rgba(0, 210, 211, 0.3)" stroke-width="1.5" />
+
+                            <!-- 第一島鏈防線 (First Island Chain) -->
+                            <path d="M 680,160 Q 560,330 450,420 T 450,560" fill="none" stroke="rgba(0, 210, 211, 0.5)" stroke-width="2" stroke-dasharray="6,4" />
+                            <text x="690" y="150" fill="var(--color-cyan)" font-size="11" font-weight="bold">第一島鏈 (First Island Chain)</text>
+
+                            <!-- 第二島鏈 (關島方向) -->
+                            <path d="M 850,220 Q 820,380 810,520" fill="none" stroke="rgba(30, 144, 255, 0.4)" stroke-width="1.5" stroke-dasharray="4,4" />
+                            <text x="820" y="210" fill="var(--color-blue)" font-size="11">第二島鏈 (Guam Axis)</text>
+
+                            <!-- 動態打擊/海纜虛線連線 -->
+                            <line x1="380" y1="360" x2="435" y2="410" stroke="rgba(255, 71, 87, 0.6)" stroke-width="2" stroke-dasharray="5,5" />
+                            <line x1="440" y1="420" x2="520" y2="350" stroke="rgba(0, 210, 211, 0.6)" stroke-width="2" stroke-dasharray="3,3" />
+
+                            <!-- 關鍵戰術互動節點 Cards / Markers -->
+                            <!-- 節點 1: 臺灣海峽主防線 -->
+                            <g class="map-node" data-node="taiwan">
+                                <circle cx="440" cy="420" r="14" fill="rgba(30, 144, 255, 0.3)" stroke="#00d2d3" stroke-width="2" />
+                                <circle cx="440" cy="420" r="6" fill="#00d2d3" class="pulse-dot" />
+                                <text x="458" y="424" fill="#ffffff" font-size="12" font-weight="bold">🇹🇼 臺灣防衛海峽核心</text>
+                            </g>
+
+                            <!-- 節點 2: 東部戰區火箭軍與東部艦隊 -->
+                            <g class="map-node" data-node="china">
+                                <circle cx="340" cy="360" r="14" fill="rgba(255, 71, 87, 0.3)" stroke="#ff4757" stroke-width="2" filter="url(#glowRed)" />
+                                <circle cx="340" cy="360" r="6" fill="#ff4757" class="pulse-dot-red" />
+                                <text x="210" y="364" fill="#ff4757" font-size="12" font-weight="bold">🇨🇳 東部戰區/火箭軍前緣</text>
+                            </g>
+
+                            <!-- 節點 3: 日本西南諸島 (與那國/宮古/石垣) -->
+                            <g class="map-node" data-node="japan">
+                                <circle cx="510" cy="360" r="12" fill="rgba(255, 165, 2, 0.3)" stroke="#ffa502" stroke-width="2" />
+                                <circle cx="510" cy="360" r="5" fill="#ffa502" />
+                                <text x="528" y="364" fill="#ffa502" font-size="12" font-weight="bold">🇯🇵 沖繩/西南諸島防線</text>
+                            </g>
+
+                            <!-- 節點 4: 朝鮮半島 DMZ 戰場 -->
+                            <g class="map-node" data-node="korea">
+                                <circle cx="475" cy="180" r="12" fill="rgba(46, 213, 115, 0.3)" stroke="#2ed573" stroke-width="2" />
+                                <circle cx="475" cy="180" r="5" fill="#2ed573" />
+                                <text x="492" y="184" fill="#2ed573" font-size="12" font-weight="bold">🇰🇷 朝鮮半島/DMZ 雙重戰場</text>
+                            </g>
+
+                            <!-- 節點 5: 南海島礁與巴林塘海峽 -->
+                            <g class="map-node" data-node="scs">
+                                <circle cx="420" cy="530" r="12" fill="rgba(0, 210, 211, 0.3)" stroke="#00d2d3" stroke-width="2" />
+                                <circle cx="420" cy="530" r="5" fill="#00d2d3" />
+                                <text x="438" y="534" fill="#00d2d3" font-size="12" font-weight="bold">🇵🇭 南海/巴士海峽航道</text>
+                            </g>
+
+                            <!-- 節點 6: 關島與美軍第七艦隊基地 -->
+                            <g class="map-node" data-node="guam">
+                                <circle cx="810" cy="450" r="12" fill="rgba(30, 144, 255, 0.3)" stroke="#1e90ff" stroke-width="2" />
+                                <circle cx="810" cy="450" r="5" fill="#1e90ff" />
+                                <text x="828" y="454" fill="#1e90ff" font-size="12" font-weight="bold">🇺🇸 關島 (Guam / CSG-5)</text>
+                            </g>
+
+                            <!-- 戰術海纜登陸點 標示 -->
+                            <g transform="translate(440, 395)">
+                                <rect width="52" height="16" rx="3" fill="rgba(0, 210, 211, 0.2)" stroke="#00d2d3" stroke-width="1" />
+                                <text x="6" y="12" fill="#00d2d3" font-size="9">淡水/頭城</text>
+                            </g>
+                        </svg>
+                    </div>
+
+                    <!-- 地圖節點動態分析面板 -->
+                    <div class="map-info-panel" id="map-info-panel">
+                        <div class="info-header">
+                            <span class="info-tag">地緣戰術動態</span>
+                            <h3 id="map-info-title">點擊地圖戰術節點以查看即態勢與動態預警</h3>
+                        </div>
+                        <div class="info-body" id="map-info-body">
+                            <p style="color:var(--text-secondary);">
+                                亞太戰術態勢地圖整合四大區域戰略節點、海纜登陸站與第一島鏈聯防部署。
+                                點擊地圖上的紅/藍/黃/綠色節點，即可獲取對應戰區的即時防衛準備、紅方威脅動向與潛在衝突外溢評估。
+                            </p>
+                            <div class="map-stats-summary" style="margin-top:16px;">
+                                <div class="stat-mini-card">
+                                    <span class="stat-lbl">海纜登陸站防護</span>
+                                    <span class="stat-val color-cyan">14條 / 3站</span>
+                                </div>
+                                <div class="stat-mini-card">
+                                    <span class="stat-lbl">預警反應時間</span>
+                                    <span class="stat-val color-yellow">12 ~ 72 小時</span>
+                                </div>
+                                <div class="stat-mini-card">
+                                    <span class="stat-lbl">第一島鏈同盟鏈路</span>
+                                    <span class="stat-val color-green">GSOMIA + LEO 備援</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== TAB 3: 四國聯合兵棋時間軸 (Timeline Player) ==================== -->
         <div class="tab-pane single-pane-container" id="tab-timeline">
             <div class="panel-card full-width-card">
                 <div class="panel-header">
@@ -253,10 +437,9 @@
         </div>
     </div>
 
-    <!-- 腳本引入 -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
-    <script src="data.js"></script>
-    <script src="app.js"></script>
+    <!-- 腳本引入 (本地優先 + 零延遲加載) -->
+    <script src="libs/marked.min.js" defer></script>
+    <script src="data.js" defer></script>
+    <script src="app.js" defer></script>
 </body>
 </html>
